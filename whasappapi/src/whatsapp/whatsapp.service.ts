@@ -2,10 +2,11 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ISession, SessionService } from 'src/session/session.service';
 
 @Injectable()
-export class WhasappService {
+export class WhatsAppService {
   async sendMessage(number: string, message: string, session: ISession) {
     const formatedNumber = this.phoneNumberFormatter(number);
     const { client } = session;
+    console.log({client});
     const isRegisteredNumber = await client.isRegisteredUser(formatedNumber);
     if (!isRegisteredNumber) {
       throw new HttpException(

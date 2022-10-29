@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Client, LocalAuth } from 'whatsapp-web.js';
-import fs from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 
 export interface ISession {
     id: string;
@@ -14,34 +14,34 @@ export interface ISession {
 @Injectable()
 export class SessionService {
     private sessions: {
-        [name: string]: ISession;
+        [id: string]: ISession;
     }
     private sessionFile: string;
 
     constructor(
         private readonly configService: ConfigService) {
-        this.loadSessionsFile();
         this.sessionFile = this.configService.get('SESSIONS_FILE')
+        this.loadSessionsFile();
     }
 
     private saveSessionsFile() {
-        fs.writeFile(this.sessionFile, JSON.stringify(this.sessions), function (err) {
-            if (err) {
-                console.log(err);
-            }
-        });
+        try {
+            writeFileSync(this.sessionFile, JSON.stringify(this.sessions));
+        } catch (err) {
+            console.log('Failed to save sessions file: ', err);
+        }
     }
 
     private loadSessionsFile() {
-        if (!fs.existsSync(this.sessionFile)) {
+        if (!existsSync(this.sessionFile)) {
             try {
-                fs.writeFileSync(this.sessionFile, JSON.stringify([]));
+                writeFileSync(this.sessionFile, JSON.stringify([]));
                 console.log('Sessions file created successfully.');
             } catch (err) {
                 console.log('Failed to create sessions file: ', err);
             }
         }
-        this.sessions = JSON.parse(fs.readFileSync(this.sessionFile).toString());
+        this.sessions = JSON.parse(readFileSync(this.sessionFile).toString());
     }
 
     getSession(id: string): ISession {
@@ -55,13 +55,15 @@ export class SessionService {
 
     updateSession(id: string, session: Partial<ISession>): ISession {
         const oldSession = this.getSession(id);
-        const newSession = {...oldSession, ...session}
+        const newSession = { ...oldSession, ...session }
         this.sessions[oldSession.id] = newSession;
         this.saveSessionsFile();
         return newSession;
     }
 
-    createSession(session: ISession) {
+    createSession(id: string) {
+        
+        const session: ISession = {client: undefined, description: "", ready: false, id, socketId: ""};
         session.client = new Client({
             restartOnAuthFail: true,
             puppeteer: {
@@ -78,10 +80,10 @@ export class SessionService {
                 ],
             },
             authStrategy: new LocalAuth({
-                clientId: session.id
+                clientId: id
             })
         });
-        this.sessions[session.id] = session;
+        this.sessions[id] = session;
         this.saveSessionsFile();
         return session;
     }
