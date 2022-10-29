@@ -1,30 +1,39 @@
 import { Logger } from '@nestjs/common';
-import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from '@nestjs/websockets';
+import {
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+  WsResponse,
+} from '@nestjs/websockets';
 import { parse } from 'cookie';
 import { Socket, Server } from 'socket.io';
-import { AuthenticationService } from './authentication/authentication.service';
 import { SessionService } from './session/session.service';
+import { UserService } from './user/user.service';
 
 @WebSocketGateway({ cors: true })
-export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-
+export class AppGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer() wss: Server;
 
   private logger: Logger = new Logger('AppGateway');
 
   constructor(
     private readonly sessionService: SessionService,
-    private readonly authenticationService: AuthenticationService
-  ) { }
+    private readonly userService: UserService,
+  ) {}
 
   handleDisconnect(client: Socket) {
     this.logger.log(`Client conected:${client.id}`);
   }
 
-  async handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket, userId: string, ...args: any[]) {
     const token = this.getTokenFromSocket(client);
-    const user = await this.authenticationService.getUserFromAuthenticationToken(token);
-    this.sessionService.updateSession(user.id, { socketId: client.id });
+    const user = this.userService.getById(userId);
+    this.sessionService.updateSession(userId, { socketId: client.id });
     this.logger.log(`User: ${user.name} conected`);
   }
 
@@ -51,5 +60,4 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
       this.wss.to(clientId).emit('message', { id: clientId, text: message });
     }
   }
-
 }

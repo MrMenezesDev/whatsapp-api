@@ -1,40 +1,31 @@
-import { Controller, Get, Post, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Headers, Body } from '@nestjs/common';
 import { AppService } from './app.service';
-import { AuthenticationService } from './authentication/authentication.service';
 import { SessionService } from './session/session.service';
+import { UserService } from './user/user.service';
 import { WhasappService } from './whasapp/whasapp.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService,
-    private readonly authenticationService: AuthenticationService,
+  constructor(
+    private readonly appService: AppService,
+    private readonly userService: UserService,
     private readonly whasappService: WhasappService,
-    private readonly sessionService: SessionService) {}
+    private readonly sessionService: SessionService,
+  ) {}
 
   @Get()
   getHello(): string {
     return this.appService.getHello();
   }
 
-  @Post('login')
-  login(userName: string, password: string) {
-    return this.authenticationService.login(userName, password);
-  }
-
   @Post('message')
-  async message(number: string, text: string, @Headers("Authentication") headers) {
-    const user = await this.authenticationService.getUserFromAuthenticationToken(headers["Authentication"]);
+  async message(
+    @Body('number') number: string,
+    @Body('text') text: string,
+    @Body('userId') userId: string,
+  ) {
+    const user = await this.userService.getById(userId);
     const session = this.sessionService.getSession(user.id);
     this.whasappService.sendMessage(number, text, session);
-  }
-
-  @Post('start')
-  start() {
-
-  }
-
-  @Post('stop')
-  stop() {
-    
   }
 }
