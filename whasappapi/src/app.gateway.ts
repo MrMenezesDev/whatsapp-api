@@ -30,17 +30,11 @@ export class AppGateway
     this.logger.log(`Client conected:${client.id}`);
   }
 
-  async handleConnection(client: Socket, userId: string, ...args: any[]) {
-    const token = this.getTokenFromSocket(client);
+  async handleConnection(client: Socket, ...args: any[]) {
+    const userId = client.handshake.query.userId as string; 
     const user = this.userService.getById(userId);
     this.sessionService.updateSession(userId, { socketId: client.id });
     this.logger.log(`User: ${user.name} conected`);
-  }
-
-  private getTokenFromSocket(client: Socket): string {
-    const cookie = client.handshake.headers.cookie;
-    const { Authentication: authenticationToken } = parse(cookie);
-    return authenticationToken;
   }
 
   afterInit(server: Server) {

@@ -6,10 +6,19 @@ import { SessionModule } from './session/session.module';
 import { AppGateway } from './app.gateway';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Global()
 @Module({
-  imports: [WhatsAppModule, SessionModule, UserModule, ConfigModule.forRoot()],
+  imports: [
+    WhatsAppModule, 
+    SessionModule, 
+    UserModule, 
+    ConfigModule.forRoot(),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static'),
+    }),],
   controllers: [AppController],
   providers: [AppService, AppGateway],
 })
