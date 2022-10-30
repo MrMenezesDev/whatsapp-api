@@ -18,14 +18,4 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post('message')
-  async message(
-    @Body('number') number: string,
-    @Body('text') text: string,
-    @Body('userId') userId: string,
-  ) {
-    const user = await this.userService.getById(userId);
-    const session = this.sessionService.getSession(user.id);
-    this.whasappService.sendMessage(number, text, session);
-  }
 }

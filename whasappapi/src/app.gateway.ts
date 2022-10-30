@@ -33,9 +33,9 @@ export class AppGateway
   async handleConnection(client: Socket, ...args: any[]) {
     const userId = client.handshake.query.userId as string;
     const user = this.userService.getById(userId);
-    const session = this.sessionService.updateSession(userId, { socketId: client.id });
+    let session = this.sessionService.updateSession(userId, { socketId: client.id, ready: false });
     this.logger.log(`User: ${user.name} conected`);
-    session.client = new Client({
+    const wsClient = new Client({
       restartOnAuthFail: true,
       puppeteer: {
           headless: true,
@@ -54,42 +54,46 @@ export class AppGateway
           clientId: userId
       })
   });
-    session.client.initialize();
-    session.client.on('qr', (qr) => {
+    wsClient.initialize();
+    wsClient.on('qr', (qr) => {
       this.logger.log('QR RECEIVED', qr);
       qrcode.toDataURL(qr, (err, url) => {
         this.wss.to(client.id).emit('qr', url);
         this.wss.to(client.id).emit('message', 'WhatsAppApi: QRCode recebido, aponte a câmera  seu celular!');
       });
     });
-    session.client.on('ready', () => {
+    wsClient.on('ready', () => {
       this.wss.to(client.id).emit('ready', 'WhatsAppApi: Dispositivo pronto!');
       this.wss.to(client.id).emit('message', 'WhatsAppApi: Dispositivo pronto!');
       this.logger.log('WhatsAppApi: Dispositivo pronto');
       const saudacaoes = ['Olá ' + user.name + ', tudo bem?', 'Oi ' + user.name + ', como vai você?', 'Opa ' + user.name + ', tudo certo?'];
       const saudacao = saudacaoes[Math.floor(Math.random() * saudacaoes.length)];
+      session = this.sessionService.updateSession(userId, { ready: true, client: wsClient });
       this.whatsAppService.sendMessage(user.number, `${saudacao} A WhatsAppApi está pronta para uso`, session);
     });
-    session.client.on('authenticated', () => {
+    wsClient.on('authenticated', () => {
       this.wss.to(client.id).emit('authenticated', 'WhatsAppApi: Autenticado!');
       this.wss.to(client.id).emit('message', 'WhatsAppApi: Autenticado!');
       this.logger.log('WhatsAppApi: Autenticado');
     });
 
-    session.client.on('auth_failure', function () {
+    wsClient.on('auth_failure', function () {
       this.wss.to(client.id).emit('message', 'WhatsAppApi: Falha na autenticação, reiniciando...');
       console.error('WhatsAppApi: Falha na autenticação');
+      session = this.sessionService.updateSession(userId, { ready: true });
     });
 
-    session.client.on('change_state', state => {
+    wsClient.on('change_state', state => {
       this.logger.log('WhatsAppApi: Status de conexão: ', state);
+      session = this.sessionService.updateSession(userId, { ready: true });
     });
 
-    session.client.on('disconnected', (reason) => {
+    wsClient.on('disconnected', (reason) => {
       this.wss.to(client.id).emit('message', 'WhatsAppApi: Cliente desconectado!');
+      session = this.sessionService.updateSession(userId, { ready: true });
       this.logger.log('WhatsAppApi: Cliente desconectado', reason);
       // TODO: Send email
-      session.client.initialize();
+      wsClient.initialize();
     });
 
   }

@@ -15,7 +15,11 @@ export class SessionController {
     @Param('userId') userId: string
   ) {
     const user = this.userService.getById(userId);
-    return this.sessionService.getSession(user.id);
+    const session = this.sessionService.getSession(user.id);
+    return {
+      ...session,
+      client: undefined
+    }
   }
 
   @Post(':userId')
@@ -23,6 +27,11 @@ export class SessionController {
     @Param('userId') userId: string
   ) {
     const user = this.userService.getById(userId);
-    return this.sessionService.createSession(user.id);
+    const session = this.sessionService.createSession(user.id);
+    return {
+      ...session,
+      client: undefined
+    }
   }
+  
 }

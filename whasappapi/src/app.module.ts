@@ -12,14 +12,15 @@ import { join } from 'path';
 @Global()
 @Module({
   imports: [
-    WhatsAppModule, 
-    SessionModule, 
-    UserModule, 
-    ConfigModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'static'),
-    }),],
+    }),
+    WhatsAppModule,
+    SessionModule,
+    UserModule,
+    ConfigModule.forRoot(),
+  ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
 })
-export class AppModule {}
+export class AppModule { }

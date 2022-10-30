@@ -7,12 +7,12 @@ export interface ISession {
     id: string;
     socketId?: string;
     ready: boolean;
-    client?: any;
+    client?: any
 }
 
 @Injectable()
 export class SessionService {
-    private sessions: ISession[];
+    private sessions: ISession[] = [];
     private sessionFile: string;
 
     constructor(
@@ -23,7 +23,13 @@ export class SessionService {
 
     private saveSessionsFile() {
         try {
-            writeFileSync(this.sessionFile, JSON.stringify(this.sessions));
+            const sessions = this.sessions.map((session) => {
+                return {
+                    ...session,
+                    client: ""
+                }
+            })
+            writeFileSync(this.sessionFile, JSON.stringify(sessions));
         } catch (err) {
             console.log('Failed to save sessions file: ', err);
         }
