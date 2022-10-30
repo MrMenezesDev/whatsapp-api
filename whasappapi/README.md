@@ -1,32 +1,16 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# WhatsApp API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Um servidor de API do WhatsApp que se conecta por meio do aplicativo de navegador da Web do WhatsApp
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Ele usa o Puppeteer para executar uma instância real do Whatsapp Web para evitar ser bloqueado.
 
-## Description
+NOTA: não é garantido que você não será bloqueado usando este método, embora tenha funcionado com algumas estratégias de adicionar textos randomicos e entrar em contato com números regitrado. O WhatsApp não permite bots ou clientes não oficiais em sua plataforma, portanto, isso não deve ser considerado totalmente seguro.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Descrição
 
-## Installation
+WhatsApp API - Uma ferramenta para alavancar seus negócios
+
+## Instalação
 
 ```bash
 $ npm install
@@ -44,30 +28,33 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+## Mantenha contato
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Erick Menezes](https://mrmenezes.dev/)
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+WhatsApp API  is [MIT licensed](LICENSE).
+
+## Funcionalidades Atuais
+
+| Funcionalidade  | Status |
+| Busca Mensagem  | ✅ |
+| Enviar Mensagem  | ✅ |
+| Consultar Sessão  | ✅ |
+| Lista Contatos  | ✅ |
+| Consulta Contato  | ✅ |
+| Lista Chat  | ✅ |
+| Consulta Chat  | ✅ |
+| Criar Sessão  | ✅ |
+
+Falta alguma coisa? Crie um problema (issue) e nos avise!
+
+## Contribuindo
+
+Pull requests são bem-vindos! Se você ver algo que gostaria de acrescentar, por favor, faça. Para mudanças drásticas, abra um problema (issue) primeiro.
+
+## Atenção
+
+Este projeto não é afiliado, associado, autorizado, endossado por, ou de qualquer forma oficialmente ligado ao WhatsApp ou qualquer de suas subsidiárias ou suas afiliadas. O site oficial do WhatsApp pode ser encontrado em https://whatsapp.com. "WhatsApp" bem como nomes, marcas, emblemas e imagens relacionados são marcas registradas de seus respectivos proprietários.
+
