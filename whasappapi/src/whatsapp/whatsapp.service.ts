@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ISession, SessionService } from 'src/session/session.service';
+import { ISession } from 'src/session/session.service';
+import { MessageAck } from 'whatsapp-web.js';
 
 @Injectable()
 export class WhatsAppService {
   async sendMessage(number: string, message: string, session: ISession) {
     const formatedNumber = this.phoneNumberFormatter(number);
     const { client } = session;
-    console.log({client});
     const isRegisteredNumber = await client.isRegisteredUser(formatedNumber);
     if (!isRegisteredNumber) {
       throw new HttpException(
@@ -14,10 +14,9 @@ export class WhatsAppService {
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
-
-    const sendedMessage = await client.sendMessage(number, message);
-
-    if (!sendedMessage?.ack) {
+    const sendedMessage = await client.sendMessage(formatedNumber, message);
+    
+    if (sendedMessage?.ack === MessageAck.ACK_ERROR) {
       throw new HttpException(sendedMessage, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

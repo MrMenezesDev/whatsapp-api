@@ -5,9 +5,9 @@ import { existsSync, readFileSync, writeFileSync } from "fs";
 
 export interface ISession {
     id: string;
-    socketId: string;
+    socketId?: string;
     ready: boolean;
-    client: any;
+    client?: any;
 }
 
 @Injectable()
@@ -60,7 +60,15 @@ export class SessionService {
     }
 
     createSession(id: string) {
-        const session: ISession = {client: undefined, ready: false, id, socketId: ""};
+        let session = this.sessions.find(sess => sess.id = id)
+        if (session) {
+            return session;
+        } else {
+            session = {
+                id,
+                ready: false
+            }
+        }
         this.sessions.push(session);
         this.saveSessionsFile();
         return session;
