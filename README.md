@@ -39,6 +39,7 @@ WhatsApp API  is [MIT licensed](LICENSE).
 ## Funcionalidades Atuais
 
 | Funcionalidade  | Status |
+| ------------- | ------------- |
 | Busca Mensagem  | ✅ |
 | Enviar Mensagem  | ✅ |
 | Consultar Sessão  | ✅ |
