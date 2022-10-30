@@ -55,6 +55,7 @@ export class AppGateway
       })
   });
     wsClient.initialize();
+    
     wsClient.on('qr', (qr) => {
       this.logger.log('QR RECEIVED', qr);
       qrcode.toDataURL(qr, (err, url) => {
@@ -62,6 +63,7 @@ export class AppGateway
         this.wss.to(client.id).emit('message', 'WhatsAppApi: QRCode recebido, aponte a câmera  seu celular!');
       });
     });
+
     wsClient.on('ready', () => {
       this.wss.to(client.id).emit('ready', 'WhatsAppApi: Dispositivo pronto!');
       this.wss.to(client.id).emit('message', 'WhatsAppApi: Dispositivo pronto!');
@@ -71,6 +73,7 @@ export class AppGateway
       session = this.sessionService.updateSession(userId, { ready: true, client: wsClient });
       this.whatsAppService.sendMessage(user.number, `${saudacao} A WhatsAppApi está pronta para uso`, session);
     });
+
     wsClient.on('authenticated', () => {
       this.wss.to(client.id).emit('authenticated', 'WhatsAppApi: Autenticado!');
       this.wss.to(client.id).emit('message', 'WhatsAppApi: Autenticado!');
@@ -79,7 +82,7 @@ export class AppGateway
 
     wsClient.on('auth_failure', function () {
       this.wss.to(client.id).emit('message', 'WhatsAppApi: Falha na autenticação, reiniciando...');
-      console.error('WhatsAppApi: Falha na autenticação');
+      this.logger.log('WhatsAppApi: Falha na autenticação');
       session = this.sessionService.updateSession(userId, { ready: true });
     });
 
@@ -92,11 +95,15 @@ export class AppGateway
       this.wss.to(client.id).emit('message', 'WhatsAppApi: Cliente desconectado!');
       session = this.sessionService.updateSession(userId, { ready: true });
       this.logger.log('WhatsAppApi: Cliente desconectado', reason);
-      // TODO: Send email
+      const saudacaoes = ['Olá ' + user.name + ', tudo bem?', 'Oi ' + user.name + ', como vai você?', 'Opa ' + user.name + ', tudo certo?'];
+      const saudacao = saudacaoes[Math.floor(Math.random() * saudacaoes.length)];
+      session = this.sessionService.updateSession(userId, { ready: true, client: wsClient });
+      this.whatsAppService.sendMessage(user.number, `${saudacao} A WhatsAppApi foi desconectada: ${reason}`, session);
       wsClient.initialize();
     });
 
   }
+  
   afterInit(server: Server) {
     this.logger.log('Initialized');
   }

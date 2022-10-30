@@ -31,7 +31,7 @@ export class SessionService {
             })
             writeFileSync(this.sessionFile, JSON.stringify(sessions));
         } catch (err) {
-            console.log('Failed to save sessions file: ', err);
+            console.error('Failed to save sessions file: ', err);
         }
     }
 
@@ -39,9 +39,8 @@ export class SessionService {
         if (!existsSync(this.sessionFile)) {
             try {
                 writeFileSync(this.sessionFile, JSON.stringify([]));
-                console.log('Sessions file created successfully.');
             } catch (err) {
-                console.log('Failed to create sessions file: ', err);
+                console.error('Failed to create sessions file: ', err);
             }
         }
         this.sessions = JSON.parse(readFileSync(this.sessionFile).toString());

@@ -1,0 +1,313 @@
+{
+	"info": {
+		"_postman_id": "aec6dfbd-eb6a-41cb-8764-74f48b90c9a4",
+		"name": "WhatsApp API Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1922882"
+	},
+	"item": [
+		{
+			"name": "Busca Mensagem",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/message/:userId?search=Pesquisa",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"message",
+						":userId"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "Pesquisa"
+						}
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Enviar Mensagem",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"text\": \"Mensagem de Teste\",\r\n    \"number\": \"55 75 86672424\",\r\n    \"userId\": \"01\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/message",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"message"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Sessão",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/session/:userId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"session",
+						":userId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lista Contatos",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/contact/:userId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"contact",
+						":userId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Contato",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/contact/:userId/contact/:contactId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"contact",
+						":userId",
+						"contact",
+						":contactId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "01"
+						},
+						{
+							"key": "contactId",
+							"value": "557196282247@c.us"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lista Chat",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/chat/:userId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chat",
+						":userId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "01"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta Chat",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/chat/:userId/chat/:chatId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chat",
+						":userId",
+						"chat",
+						":chatId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "01"
+						},
+						{
+							"key": "chatId",
+							"value": "557596282277@c.us"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Sessão",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/session/:userId",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"session",
+						":userId"
+					],
+					"variable": [
+						{
+							"key": "userId",
+							"value": "01"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000"
+		},
+		{
+			"key": "userId",
+			"value": "01"
+		}
+	]
+}
