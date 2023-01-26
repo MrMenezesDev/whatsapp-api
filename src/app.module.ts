@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { ChatwootModule } from './chatwoot/chatwoot.module';
 
 @Global()
 @Module({
@@ -19,6 +20,7 @@ import { join } from 'path';
     SessionModule,
     UserModule,
     ConfigModule.forRoot(),
+    ChatwootModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
