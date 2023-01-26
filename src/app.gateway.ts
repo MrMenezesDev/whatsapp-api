@@ -7,7 +7,8 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { Client, LocalAuth } from 'whatsapp-web.js';
+import { Client, Contact, LocalAuth, MessageMedia } from 'whatsapp-web.js';
+import { ChatwootService } from './chatwoot/chatwoot.service';
 import { SessionService } from './session/session.service';
 import { UserService } from './user/user.service';
 import { WhatsAppService } from './whatsapp/whatsapp.service';
@@ -23,6 +24,7 @@ export class AppGateway
   constructor(
     private readonly sessionService: SessionService,
     private readonly userService: UserService,
+    private readonly chatwootService: ChatwootService,
     private readonly whatsAppService: WhatsAppService,
   ) { }
 
@@ -38,29 +40,32 @@ export class AppGateway
     const wsClient = new Client({
       restartOnAuthFail: true,
       puppeteer: {
-          headless: true,
-          args: [
-              '--no-sandbox',
-              '--disable-setuid-sandbox',
-              '--disable-dev-shm-usage',
-              '--disable-accelerated-2d-canvas',
-              '--no-first-run',
-              '--no-zygote',
-              // '--single-process', // <- this one doesn't works in Windows
-              '--disable-gpu'
-          ],
+        headless: true,
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-accelerated-2d-canvas',
+          '--no-first-run',
+          '--no-zygote',
+          // '--single-process', // <- this one doesn't works in Windows
+          '--disable-gpu'
+        ],
       },
       authStrategy: new LocalAuth({
-          clientId: userId
+        clientId: userId
       })
-  });
+    });
     wsClient.initialize();
-    
+
     wsClient.on('qr', (qr) => {
       this.logger.log('QR RECEIVED', qr);
       qrcode.toDataURL(qr, (err, url) => {
         this.wss.to(client.id).emit('qr', url);
         this.wss.to(client.id).emit('message', 'WhatsAppApi: QRCode recebido, aponte a câmera  seu celular!');
+      });
+      qrcode.toBuffer(qr, (error, buffer) => {
+        // SEND IMAGE
       });
     });
 
@@ -73,6 +78,43 @@ export class AppGateway
       session = this.sessionService.updateSession(userId, { ready: true, client: wsClient });
       this.whatsAppService.sendMessage(user.number, `${saudacao} A WhatsAppApi está pronta para uso`, session);
     });
+
+    wsClient.on("message", async (message) => {
+      let attachment = null;
+      if (message.hasMedia) {
+        attachment = await message.downloadMedia();
+      }
+
+      let messagePrefix: string | undefined;
+      let authorContact: Contact;
+      //if author != null it means the message was sent to a group chat
+      //so we need to prefix the author's name
+      if (message.author != null) {
+        authorContact = await wsClient.getContactById(message.author);
+        messagePrefix = `${authorContact.name ?? authorContact.pushname ?? authorContact.number}: `;
+      }
+
+      this.chatwootService.broadcastMessageToChatwoot(message, "incoming", userId, user.chatwoot.accountId, user.chatwoot.inboxId, attachment, messagePrefix);
+    });
+
+    wsClient.on("message_create", async (message) => {
+      if (message.fromMe) {
+          let attachment: MessageMedia | undefined;
+
+          const rawData = <{ self: string }>message.rawData;
+          //broadcast WA message to chatwoot only if it was created
+          //from a real device/wa web and not from chatwoot app
+          //to avoid endless loop
+          if (rawData.self === "in") {
+              if (message.hasMedia) {
+                  attachment = await message.downloadMedia();
+              }
+
+              this.chatwootService?.broadcastMessageToChatwoot(
+                message, "incoming", userId, user.chatwoot.accountId, user.chatwoot.inboxId, attachment, "");
+          }
+      }
+  });
 
     wsClient.on('authenticated', () => {
       this.wss.to(client.id).emit('authenticated', 'WhatsAppApi: Autenticado!');
@@ -103,7 +145,7 @@ export class AppGateway
     });
 
   }
-  
+
   afterInit(server: Server) {
     this.logger.log('Initialized');
   }
