@@ -1,4 +1,4 @@
-import { ChatwootClient, ChatwootMessagePayload } from '@mrdev/chatwoot-client';
+import { ChatwootClient, ChatwootMessagePayload } from '@mrmenezesdev/chatwoot-client';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { SessionService } from 'src/session/session.service';
 import { UserService } from 'src/user/user.service';
