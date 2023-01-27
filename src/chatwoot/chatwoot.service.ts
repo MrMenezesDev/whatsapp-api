@@ -7,13 +7,20 @@ import { Chat, Message } from 'whatsapp-web.js';
 @Injectable()
 export class ChatwootService {
     inboxUser: {
-        [key: string]: string;
+        [key: string | number]: string;
     }
 
     constructor(
         private readonly userService: UserService,
         private readonly sessionService: SessionService,
-    ) { }
+    ) {
+        this.inboxUser = {};
+        const users = this.userService.getUSers();
+        for (let user of users) {
+            this.inboxUser[user.chatwoot.inboxId] = user.id;
+        }
+    }
+
 
     getUserFromMessage(message: ChatwootMessagePayload) {
         const userId = this.inboxUser[message.inbox.id];
@@ -113,7 +120,7 @@ export class ChatwootService {
         if (type == "outgoing") {
             isPrivate = true;
         }
-        
+
         await this.getClient(userId).conversations(accountId).postChatwootMessage(
             chatwootConversation.id as string,
             message.body,

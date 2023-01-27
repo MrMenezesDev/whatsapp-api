@@ -31,6 +31,10 @@ export class UserService {
     },
   ];
 
+  getUSers(): IUser[] {
+    return this.users;
+  }
+
   getById(userId: string): IUser {
     return this.users.find((user) => userId === user.id);
   }

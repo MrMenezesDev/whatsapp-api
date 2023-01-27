@@ -14,7 +14,7 @@ export class ChatwootController {
 
     @Post('message')
     async message(
-      @Body('message') message: ChatwootMessagePayload
+      @Body() message: ChatwootMessagePayload
     ) {
         const user = await this.chatwootService.getUserFromMessage(message);
         const session = await this.sessionService.getSession(user.id);
