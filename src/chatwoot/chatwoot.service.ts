@@ -113,8 +113,7 @@ export class ChatwootService {
         if (type == "outgoing") {
             isPrivate = true;
         }
-
-
+        
         await this.getClient(userId).conversations(accountId).postChatwootMessage(
             chatwootConversation.id as string,
             message.body,
@@ -127,7 +126,7 @@ export class ChatwootService {
 
 
     async findChatwootContactByIdentifier(identifier: string, userId: string, accountId: string) {
-        const contacts = await this.getClient(userId).contacts(accountId).search(identifier)
+        const contacts = (await this.getClient(userId).contacts(accountId).search(identifier)).data.payload
         for (const contact of contacts) {
             //in order to retrieve a chatwoot contact by identifier,
             //we search contacts with query, however this can get false positives
@@ -143,7 +142,7 @@ export class ChatwootService {
     }
 
     async findChatwootContactByPhone(phone: string, userId: string, accountId: string) {
-        const contacts = await this.getClient(userId).contacts(accountId).search(phone)
+        const contacts = (await this.getClient(userId).contacts(accountId).search(phone)).data.payload
         if (contacts.length > 0) {
             for (const contact of contacts) {
                 //in order to retrieve a chatwoot contact by phone,

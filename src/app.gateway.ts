@@ -7,7 +7,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { Client, Contact, LocalAuth, MessageMedia } from 'whatsapp-web.js';
+import { Client, Contact, LocalAuth, Message, MessageMedia } from 'whatsapp-web.js';
 import { ChatwootService } from './chatwoot/chatwoot.service';
 import { SessionService } from './session/session.service';
 import { UserService } from './user/user.service';
@@ -65,7 +65,24 @@ export class AppGateway
         this.wss.to(client.id).emit('message', 'WhatsAppApi: QRCode recebido, aponte a câmera  seu celular!');
       });
       qrcode.toBuffer(qr, (error, buffer) => {
-        // SEND IMAGE
+        const attch: MessageMedia = {
+          data: buffer,
+          mimetype: "png",
+          filename: "qr.png"
+        }
+        const message = {
+          body: '**Qr Code!**',
+          getChat: () => { return {
+            id: {
+              user: "MrDev",
+              server: "WhatsApi"
+            },
+            name: "WhatsApi",
+          }}
+        }
+        const contact = this.chatwootService.broadcastMessageToChatwoot(message as unknown as Message, "outgoing", userId, user.chatwoot.accountId, user.chatwoot.inboxId,
+        attch,"");
+
       });
     });
 
