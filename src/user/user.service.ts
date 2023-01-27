@@ -25,7 +25,7 @@ export class UserService {
         inboxId: 1,
         accountId: "01",
         apiAccessToken: "ND8VsvE1r5WQYNFtAiWNM3mo",
-        host: "https://15.229.77.171",
+        host: "http://18.231.150.253:3000",
         id: "01"
       }
     },

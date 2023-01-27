@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ChatwootService } from './chatwoot.service';
-import { ChatwootMessagePayload } from '@chatwoot/client';
+import { ChatwootMessagePayload } from '@mrdev/chatwoot-client';
 import { SessionService } from 'src/session/session.service';
 import { WhatsAppService } from 'src/whatsapp/whatsapp.service';
 
