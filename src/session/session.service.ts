@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Client, LocalAuth } from 'whatsapp-web.js';
 import { existsSync, readFileSync, writeFileSync } from "fs";
 
 export interface ISession {

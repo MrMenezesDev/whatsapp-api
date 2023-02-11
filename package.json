@@ -20,7 +20,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "doc:serve": "compodoc src -s",
-    "doc:build": "npx @compodoc/compodoc -p tsconfig.json"
+    "doc:build": "npx @compodoc/compodoc -p tsconfig.json",
+    "proxy": "ngrok http 3000"
   },
   "dependencies": {
     "@mrdev/chatwoot-client": "file:../mrdev-chatwoot-client",
@@ -37,7 +38,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "whatsapp-web.js": "^1.19.2"
+    "whatsapp-web.js": "^1.19.3"
   },
   "devDependencies": {
     "@compodoc/compodoc": "^1.1.19",

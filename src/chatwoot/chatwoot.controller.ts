@@ -18,7 +18,7 @@ export class ChatwootController {
     ) {
         const user = await this.chatwootService.getUserFromMessage(message);
         const session = await this.sessionService.getSession(user.id);
-        await this.whatsAppService.sendMessage(message.conversation.meta.sender.phone_number, message.content, session);
+        await this.whatsAppService.sendMessage(message.conversation.contact_inbox.source_id.split(":")[1], message.content, session);
     }
   
 }

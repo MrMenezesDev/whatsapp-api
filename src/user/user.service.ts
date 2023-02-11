@@ -24,8 +24,8 @@ export class UserService {
       chatwoot: {
         inboxId: 1,
         accountId: "01",
-        apiAccessToken: "ND8VsvE1r5WQYNFtAiWNM3mo",
-        host: "http://18.231.150.253:3000",
+        apiAccessToken: "7G7U7wEafNM5uxkPA7jP5p2x",
+        host: "https://woot.mrmenezes.dev",
         id: "01"
       }
     },

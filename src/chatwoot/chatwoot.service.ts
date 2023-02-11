@@ -23,7 +23,8 @@ export class ChatwootService {
 
 
     getUserFromMessage(message: ChatwootMessagePayload) {
-        const userId = this.inboxUser[message.inbox.id];
+        // console.log({ message})
+        const userId = this.inboxUser[message.inbox_id] || this.inboxUser[message.inbox.id];
         if (!userId) {
             throw new HttpException(`Inbox ${message.inbox.id} not found`, HttpStatus.NOT_FOUND);
         }
@@ -79,10 +80,10 @@ export class ChatwootService {
             chatwootContact = await this.findChatwootContactByPhone(contactNumber, userId, accountId);
 
             if (chatwootContact == null) {
-                const result = <{ contact: object }>(
+                const result = <{ data: {payload: {contact: object}} }>(
                     await this.makeChatwootContact(inboxId, contactName, contactNumber, contactIdentifier, userId, accountId)
                 );
-                chatwootContact = result.contact;
+                chatwootContact = result.data.payload.contact;
             } else {
                 //small improvement to update identifier on contacts who don't have WA identifier
                 const updatedData = { identifier: contactIdentifier };
@@ -98,6 +99,7 @@ export class ChatwootService {
         }
 
         if (chatwootConversation == null) {
+            // console.log({chatwootContact});
             chatwootConversation = await this.makeChatwootConversation(
                 sourceId,
                 inboxId,
@@ -130,8 +132,7 @@ export class ChatwootService {
             attachment
         );
     }
-
-
+    
     async findChatwootContactByIdentifier(identifier: string, userId: string, accountId: string) {
         const contacts = (await this.getClient(userId).contacts(accountId).search(identifier)).data.payload
         for (const contact of contacts) {
